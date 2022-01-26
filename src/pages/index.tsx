@@ -1,10 +1,14 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import Head from 'next/head'; //Tudo nesse Head vai ser anexado ao Head de _documents
 
 import { SubscribeButton } from '../components/SubscribeButton';
 import { stripe } from '../services/stripe';
 
 import styles from './Home.module.scss';
+
+/*  Client-side
+    Server-side
+    Static Site Generation */
 
 interface HomeProps{
   product:{
@@ -35,7 +39,7 @@ export default function Home({product}: HomeProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => { //camada node next
+export const getStaticProps: GetStaticProps = async () => { //camada node next
   const price = await stripe.prices.retrieve('price_1KJ1jeAwhzs1IwCsIkgSDUM9' , {
     expand: ['product'] //expand dá acesso a todas as infos do produto
   })
@@ -51,6 +55,7 @@ export const getServerSideProps: GetServerSideProps = async () => { //camada nod
   return { //tudo que retorna de props aqui é mostrada em Home(props) por exemplo.
     props:{
       product,
-    }
+    },
+    revalidate: 60*60*24//24 horas. Quanto tempo em segundos para que a página fique sem ser revalidada
   }
 }
