@@ -52,7 +52,7 @@ export default NextAuth({
         return false;
       }
       
-      console.log(user);
+      // console.log(user);
     },
   }
 })
